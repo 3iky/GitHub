@@ -46,11 +46,16 @@ int main(int argc, char *argv[])
 	char filename[FILENAME_MAX];	// holds either in file [1] or out file [2]
 	char filename2[FILENAME_MAX];	// holds output file filename
 	char c = ' ';					// initializes c is char type
-	int maxLineSize = 0, num = 0;	// maxLineSize: amount of inputs per line, num: individual inputs from each line
-	int sum = 0, sumOfSquares = 0, largest = INT_MIN, smallest = INT_MAX, dataCount = 0; // sum: inputs added together, sumOfSquares: each input squared added together,
-		// largest: largest number in each data line, smallest: smallest number in each data line, dataCount: data in each line
-	double mean = 0, variation = 0, stdDeviation = 0; // mean: average value of data, variation: range from smallest/largest values compared to mean, 
-		// stdDeviation: standard deviation
+	int maxLineSize = 0;			// amount of inputs per line
+	int num = 0;					// num: individual inputs from each line
+	int sum = 0;					// inputs added together
+	int sumOfSquares = 0;			// each input squared added together
+	int largest = INT_MIN;			// largest number in each data line
+	int smallest = INT_MAX;			// smallest number in each data line
+	int dataCount = 0;				// numbers per line
+	double mean = 0;				// average value of data
+	double variation = 0;			// range from smallest/largest values compared to mean
+	double stdDeviation = 0;		// standard deviation
 
 	// Header of program
 	puts("Standard Deviation Program\n");
