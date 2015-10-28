@@ -10,24 +10,53 @@
 #include <math.h>
 #define MAX 256
 #pragma warning(disable: 4996) 
-//*-----HEADER*------*//
+//---------------------------------------------------------------------------------
+//   Function:    main()
+//
+//   Title:       Standard Deviation Calculator
+//
+//   Description: 
+//                Reads data from file.
+//				  Calculates mean, variance, standard deviation
+//				  Writes to new file
+//
+//   Programmer:  Scott Little
+//   
+//   Date:        10/24/2015
+// 
+//   Version:     1.01
+//  
+//   Environment: Intel i7 PC 
+//                Software:   MS Windows 10 for execution; 
+//                Compiles under Microsoft Visual Studio.Net 2013
+//
+//   Output:      # of data, sum, range, mean, variance, standard deviation
+//
+//   Calls:       fscanf, fprintf
+//
+//   Returns:     EXIT_SUCCESS (successful execution)
+//
+//   History Log:	10/24/2015 updated header info, updated code, added fprintf commands
+//					10/28/2015 fixed read/write errors, calculation errors
+// ------------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-	FILE * inFileHandle = NULL; // handles existing input file
-	FILE * outFileHandle = NULL; // handles nonexisting output file
-	char filename[FILENAME_MAX]; // array to hold either in file [1] or out file [2]
-	char filename2[FILENAME_MAX];
-	char input[MAX];
-	char c = ' ';
-	int maxLineSize = 0, num = 0;
-	int sum = 0, sumOfSquares = 0, largest = INT_MIN, smallest = INT_MAX, dataCount = 0;
-	double mean = 0, variation = 0, stdDeviation = 0;
+	FILE * inFileHandle = NULL;		// handles existing input file
+	FILE * outFileHandle = NULL;	// handles nonexisting output file
+	char filename[FILENAME_MAX];	// holds either in file [1] or out file [2]
+	char filename2[FILENAME_MAX];	// holds output file filename
+	char c = ' ';					// initializes c is char type
+	int maxLineSize = 0, num = 0;	// maxLineSize: amount of inputs per line, num: individual inputs from each line
+	int sum = 0, sumOfSquares = 0, largest = INT_MIN, smallest = INT_MAX, dataCount = 0; // sum: inputs added together, sumOfSquares: each input squared added together,
+		// largest: largest number in each data line, smallest: smallest number in each data line, dataCount: data in each line
+	double mean = 0, variation = 0, stdDeviation = 0; // mean: average value of data, variation: range from smallest/largest values compared to mean, 
+		// stdDeviation: standard deviation
 
 	// Header of program
 	puts("Standard Deviation Program\n");
 	puts("___________________________\n");
 	puts("Written by Scott Little\n");
-
+	// ask user for name of source file, assign to filename
 	puts("Enter the name of the file to read (source):");
 	fgets(filename, FILENAME_MAX, stdin);
 	
@@ -45,15 +74,9 @@ int main(int argc, char *argv[])
 		getchar();
 		exit(EXIT_FAILURE);
 	}
-	if (argc > 2)
-	{
-		strncpy(filename, argv[2], FILENAME_MAX);
-	}
-	else
-	{
 		printf("Enter the name of the file to write (output): \n");
 		scanf("%s", filename2);
-	}
+	// alert user if output file cannot be opened
 	if ((outFileHandle = fopen(filename, "a")) == NULL)
 	{
 	
@@ -63,71 +86,37 @@ int main(int argc, char *argv[])
 		getch();
 		return EXIT_FAILURE;
 	}
-
-	outFileHandle = fopen(filename2, "w");	//Opens output file from user input
+	// opens output file, writes header to file
+	outFileHandle = fopen(filename2, "w");
 	fprintf(outFileHandle, "The results from file %s are:\n", filename);
 	fprintf(outFileHandle, "_________________________________________________________________________________________________________________\n");
 	fprintf(outFileHandle, "|# of data|\tsum\t|\trange\t|\tmean\t|\tvariance\t|\tstandard deviation\t|\n");
 	fprintf(outFileHandle, "_________________________________________________________________________________________________________________\n");
+	// scan data from input file, do math/conversions, output data to output file
 	while (fscanf(inFileHandle, "%d", &maxLineSize) == 1)
 	{
 		for (int j = 0; j < maxLineSize; j++)
 		{
 			fscanf(inFileHandle, "%d", &num);
 			sum += num;
-			sumOfSquares = pow(num, 2);
 			largest = num > largest ? num : largest;
 			smallest = num < smallest ? num : smallest;
+			sumOfSquares += pow(num, 2);
 		}
 		dataCount += maxLineSize;
 		mean = (double)sum / (double)dataCount;
 		variation = (sumOfSquares - (pow(sum, 2) / dataCount)) / (dataCount - 1);
 		stdDeviation = sqrt(variation);
-		fprintf(outFileHandle, "%6i %11i %12i to %-6i %8.3f %16.3f %24.3f \n", dataCount, sum, smallest, largest, mean, variation, stdDeviation);
+		fprintf(outFileHandle, "|%9d|%13d|%5i to %-6i|%15.3f|%23.3f|%31.3f|\n", dataCount, sum, smallest, largest, mean, variation, stdDeviation);
+		fprintf(outFileHandle, "_________________________________________________________________________________________________________________\n");
 	}
-		/* 
-			5
-			5  7  3  6  6
-			2
-			-1  5
-		*/
-
-		/* sum += num;
-		sumOfSquares = pow(num, 2);
-		if (num > largest)
-			largest = num;
-		if (num < smallest)
-			smallest = num;
-		mean = sum / (i + 1); */
-		//variance = (sum_of_squares - (pow(sum, 2)  sum_of_data_counts))  (sum_of_data_counts - 1);
-		//standard_deviation = sqrt(variance);
-		
-		
-		//if (c == ' ')
-		//	c = '\n';
-		//putc(c, outFileHandle);
-
-		//fprintf(outFileHandle, "\nMean: %d", mean);
-		//fprintf(outFileHandle, "%d", num);
-		//getc(inFileHandle);
-		//if ((c = (char)getc(inFileHandle)) == EOF)
-		//	break;
-	//}
-	//fprintf(outFileHandle, "\nLargest: %d" "\nSmallest: %d", largest, smallest);
-	/*while ((c = (char)getc(inFileHandle)) != EOF)
-	{
-
-		
-		
-
-		putc(c, outFileHandle);
-
-	} */
+	// close files, confirms successful to user
 	fclose(inFileHandle);
 	fclose(outFileHandle);
-	puts("\nPress any key to Continue");
+	puts("\nSuccess!");
+	puts("Press any key to Continue");
 	getch();
-
+	// returns EXIT_FAILURE
 	return EXIT_FAILURE;
 
 }
