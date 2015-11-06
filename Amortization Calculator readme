@@ -1,5 +1,0 @@
-Calulations:
-
-get_payment_amount = (((get_interest_rate / 1200) + ((get_interest_rate / 1200) / (pow((1 + (get_interest_rate / 1200)),get_number_of_months) - 1)))*get_loan_amount);
-get_number_of_months = ((-log(1 - (((get_interest_rate / 1200) * get_loan_amount) / get_payment_amount))) / (log(1 + (get_interest_rate / 1200))));
-get_loan_amount = ((((pow(1+(get_interest_rate/1200))^get_number_of_months)-1),get_payment_amount)/((get_interest_rate/1200)*(pow(1+(get_interest_rate/1200)),get_number_of_months)))
