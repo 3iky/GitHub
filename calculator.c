@@ -1,7 +1,9 @@
 /* calculator.c -- calculations and management functions */
 #include <stdio.h>
+#include <stdlib.h>
 #include "calculator.h"
 #pragma warning(disable: 4996)
+
 int menu(void)
 {
 	int c, status;
@@ -44,7 +46,6 @@ double monthly_payment(double get_payment_amount)
 	scanf("%d", &get_number_of_months);
 	printf("Number of Months to pay: %d\n", get_number_of_months);
 	get_payment_amount = (((get_interest_rate / 1200) + ((get_interest_rate / 1200) / (pow((1 + (get_interest_rate / 1200)), get_number_of_months) - 1)))*get_loan_amount);
-
 	return get_interest_rate;
 }
 
@@ -84,18 +85,21 @@ int number_of_months(int get_number_of_months)
 	printf("Please enter the amount of the monthly payment: $");
 	scanf("%lf", &get_payment_amount);
 	printf("Monthly Payment: $%.2lf", get_payment_amount);
-	get_number_of_months = ((-log(1 - (((get_interest_rate / 1200) * get_loan_amount) / get_payment_amount))) / (log(1 + (get_interest_rate / 1200))));
+//	get_number_of_months = ((-log(1 - (((get_interest_rate / 1200) * get_loan_amount) / get_payment_amount))) / (log(1 + (get_interest_rate / 1200))));
 
 	return get_number_of_months;
 }
-void showprice(double rate, int nights)
+
+
+
+/*	void showprice(double rate, int nights)
 {
 	int n;
 	double total = 0.0;
 	double factor = 1.0;
-
+*/
 /*	for (n = 1; n <= nights; n++, factor *= DISCOUNT)
 		total += rate * factor;
 	printf("The total cost will be $%0.2f.\n", total);
+	}
 */
-}
