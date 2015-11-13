@@ -1,5 +1,9 @@
+11/13/2015 uploaded working copy for payments, need clean up and add headers to functions and a few other odds and ends. 
+
 Calulations:
 
 get_payment_amount = (((get_interest_rate / 1200) + ((get_interest_rate / 1200) / (pow((1 + (get_interest_rate / 1200)),get_number_of_months) - 1)))*get_loan_amount);
 get_number_of_months = ((-log(1 - (((get_interest_rate / 1200) * get_loan_amount) / get_payment_amount))) / (log(1 + (get_interest_rate / 1200))));
 get_loan_amount = ((((pow(1+(get_interest_rate/1200))^get_number_of_months)-1),get_payment_amount)/((get_interest_rate/1200)*(pow(1+(get_interest_rate/1200)),get_number_of_months)))
+
+
