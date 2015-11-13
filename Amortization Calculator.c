@@ -20,6 +20,15 @@ double payment_amount(void);
 double loan_amount(void);
 int number_of_months(void);
 void file_handle(FILE * fp);
+double round_double(void);
+
+double interest_rate_read(void);
+double 	loan_amount_read(void);
+double payment_amount_read(void);
+int number_of_months_read(void);
+
+void safe_read_int(int* number_ptr, const char * prompt);
+void safe_read_double(double* number_ptr, const char * prompt);
 
 int main(void)
 {
@@ -65,47 +74,28 @@ int main(void)
 
 double payment_amount(void)
 {
-	printf("\nPlease enter the interest rate (APR) you will be paying (nearest 1/8 point): ");
-	scanf("%lf", &get_interest_rate);
-	printf("Interest %.3lf%%", get_interest_rate);
-	printf("\nPlease enter the amount of money to be borrowed: $");
-	scanf("%lf", &get_loan_amount);
-	printf("Principal: $%.2lf", get_loan_amount);
-	printf("\nPlease enter the number of months you will be making payments: ");
-	scanf("%d", &get_number_of_months);
-	printf("Number of Months to pay: %d\n", get_number_of_months);
-	get_payment_amount = payment_amount_calc(get_interest_rate, get_loan_amount, get_number_of_months);
+	interest_rate_read();
+	loan_amount_read();
+	number_of_months_read();
+	get_payment_amount = payment_amount_calc(get_loan_amount, get_interest_rate, get_number_of_months);
 	printf("\nPayment: $%.2lf per month\n\n", get_payment_amount);
 }
 
 double loan_amount(void)
 {
-	printf("\nPlease enter the interest rate (APR) you will be paying (nearest 1/8 point): ");
-	scanf("%lf", &get_interest_rate);
-	printf("Interest %.3lf%%", get_interest_rate);
-	printf("\nPlease enter the amount of the monthly payment: $");
-	scanf("%lf", &get_payment_amount);
-	printf("Monthly Payment: $%.2lf", get_payment_amount);
-	printf("\nPlease enter the number of months you will be making payments: ");
-	scanf("%d", &get_number_of_months);
-	printf("Number of Months to pay: %d\n", get_number_of_months);
-	get_loan_amount = ((pow((1 + (get_interest_rate / 1200)), get_number_of_months) - 1), get_payment_amount) / (get_interest_rate / 1200)*(pow((1 + (get_interest_rate / 1200)), get_number_of_months));
+	interest_rate_read();
+	number_of_months_read();
+	payment_amount_read();
+	get_loan_amount = loan_amount_calc(get_loan_amount, get_payment_amount, get_interest_rate, get_number_of_months);
 	printf("\nLoan Amount: $%.2lf\n\n", get_loan_amount);
 }
 
 int number_of_months(void)
 {
-	printf("\nPlease enter the interest rate (APR) you will be paying (nearest 1/8 point): ");
-	scanf("%lf", &get_interest_rate);
-	printf("Interest %.3lf%%", get_interest_rate);
-	printf("\nPlease enter the amount of money to be borrowed: $");
-	scanf("%lf", &get_loan_amount);
-	printf("Principal: $%.2lf", get_loan_amount);
-	puts("\n\tmonthly payment mus be greater than $25.00 ;");
-	printf("Please enter the amount of the monthly payment: $");
-	scanf("%lf", &get_payment_amount);
-	printf("Monthly Payment: $%.2lf\n", get_payment_amount);
-	get_number_of_months = ((-log(1 - (((get_interest_rate / 1200) * get_loan_amount) / get_payment_amount))) / (log(1 + (get_interest_rate / 1200))));
+	interest_rate_read();
+	loan_amount_read();
+	payment_amount_read();
+	get_number_of_months = number_of_months_calc(get_number_of_months, get_payment_amount, get_loan_amount, get_interest_rate);
 	printf("\nNumber of Months to pay: %d\n\n", get_number_of_months);
 }
 
@@ -119,7 +109,7 @@ void file_handle(FILE * fp)
 	fprintf(fp, "Amortization Table for $%.2lf Loan at %.3lf%% interest for %d months\n", get_loan_amount, get_interest_rate, get_number_of_months);
 	fprintf(fp, "Payments	 Principal paid  Interest Paid   Loan Balance\n");
 	loan_balance = get_loan_amount;
-	for (i = 1; i < get_number_of_months; i++)
+	for (i = 0; i < get_number_of_months; i++)
 	{
 		interest_paid = ((get_interest_rate / 1200) * loan_balance);
 		principal_paid = (get_payment_amount - interest_paid);
@@ -127,4 +117,45 @@ void file_handle(FILE * fp)
 		fprintf(fp, "%-3d (%9.2lf) $%14.2lf $%14.2f $%14.2lf\n", (i + 1), get_payment_amount, principal_paid, interest_paid, loan_balance);
 	}
 	system("cls");
+}
+
+double interest_rate_read(void)
+{
+	safe_read_double(&get_interest_rate, "\nPlease enter the interest rate (APR) you will be paying (nearest 1/8 point): ");
+	get_interest_rate = round(get_interest_rate * 8) / 8.0;
+	printf("Interest %.3lf%%", get_interest_rate);
+}
+
+double loan_amount_read(void)
+{
+	safe_read_double(&get_loan_amount, "\nPlease enter the amount of money to be borrowed: $");
+	get_loan_amount = floor(get_loan_amount * 100.0 + 0.9999) / 100.0;
+	printf("Principle: $%.2lf\n", get_loan_amount);
+}	
+
+double payment_amount_read(void)
+{
+	puts("\n\tmonthly payment mus be greater than $25.00 ;");
+	safe_read_double(&get_payment_amount, "Please enter the amount of the monthly payment: $");
+	get_payment_amount = floor(get_payment_amount * 100.0 + 0.9999) / 100.0;
+	printf("Monthly Payment: $%.2lf\n", get_payment_amount);
+}
+
+int number_of_months_read(void)
+{
+	safe_read_int(&get_number_of_months, "Please enter the number of months you will be making payments: ");
+	printf("Number of Months to pay: %d\n", get_number_of_months);
+}
+
+void safe_read_int(int* number_ptr, const char * prompt)
+{
+	printf(prompt);
+	scanf("%d", number_ptr);
+	while (getchar() != '\n');
+}
+void safe_read_double(double* number_ptr, const char * prompt)
+{
+	printf(prompt);
+	scanf("%lf", number_ptr);
+	while (getchar() != '\n');
 }
