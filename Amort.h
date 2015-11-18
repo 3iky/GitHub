@@ -1,21 +1,26 @@
-/* Amort.c -- calculations and management functions */
-#include <stdio.h>
-#include <stdlib.h>
-#include "Amort.h"
-#include <math.h>
+/* Amort.h -- constants and declrations for Amort.c */
+#ifndef ARRAYS_H
+#define QUIT 5
+#define OUT_FILE_NAME "AmTable.txt"
+#define MONTHLY_INTEREST_RATE 1200.0
 
-double get_payment_amount(double loan_amount, double interest_rate, int number_of_months)
-{
-	return (((pow((1.0 + (interest_rate)), (double)number_of_months) / (pow((1.0 + (interest_rate )), (double)number_of_months) - 1.0)) * loan_amount) * (interest_rate ));
-}
+double interest_rate;
+double payment_amount;
+double loan_amount;
+int number_of_months;
+double interest_rate_holder;
 
-double get_loan_amount(double payment_amount, double interest_rate, int number_of_months)
-{
-	return ((pow((1.0 + interest_rate), (double)number_of_months) - 1.0) / (interest_rate * (pow((1.0 + interest_rate), (double)number_of_months))) * payment_amount);
-}
+double principal_paid;
+double interest_paid;
+double loan_balance;
 
-int get_number_of_months(double payment_amount, double loan_amount, double interest_rate)
-{
-	return ((log(payment_amount) - log(payment_amount - (loan_amount * interest_rate))) / log(1.0 + interest_rate));
+FILE * fp;
+int c;
 
-}
+double get_payment_amount(double interest_rate, double loan_amount, int number_of_months);
+
+double get_loan_amount(double payment_amount, double interest_rate, int number_of_months);
+
+int get_number_of_months(double payment_amount, double interest_rate, double loan_amount);
+
+#endif
